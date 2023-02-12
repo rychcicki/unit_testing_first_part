@@ -1,0 +1,9 @@
+org\example\unittesting\verifier\customer\SimpleVerification.class
+org\example\unittesting\verifier\Verification.class
+org\example\Main.class
+org\example\unittesting\customer\Customer.class
+org\example\unittesting\customer\Person$STATUS.class
+org\example\unittesting\customer\Person$GENDER.class
+org\example\unittesting\customer\Person.class
+org\example\unittesting\verifier\customer\verification\AgeVerification.class
+org\example\unittesting\verifier\customer\verification\NationalIdentificationNumberVerification.class
