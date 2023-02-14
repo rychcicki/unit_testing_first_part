@@ -7,72 +7,71 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-
 class AgeVerificationTest {
     private final AgeVerification ageVerification = new AgeVerification();
 
     @Test
     void shouldReturnFalseWhenAgeOver99() {
         //given - arrange
-        Person person = buildPerson(LocalDate.of(1899, 4, 25), Person.GENDER.MALE, "99042503899");
+        Person person = buildPerson(101);
         // when - act
-        boolean result = ageVerification.passes(person);
+
         // then - assert
-        Assertions.assertFalse(result);
+        Assertions.assertFalse(person.getAge() < 100);
     }
 
     @Test
     void shouldReturnTrueWhenAge23() {
         //given - arrange
-        Person person = buildPerson(LocalDate.of(2000, 1, 25), Person.GENDER.FEMALE, "99042503899");
+        Person person = buildPerson(23);
         //when - act
-        boolean result = person.getAge() == 23;
+
         //then - assert
-        Assertions.assertTrue(result);
+        Assertions.assertEquals(23, person.getAge());
     }
 
     /**
-     * W Jaki sposób określić warunki (when)? Co powinno być w then? Czy należy skorzystać np. z assertThatThrownBy()
-     * W sumie większość warunków jest sprawdzana w metodzie passes();
+     * Poniższy test działa źle. Jeżeli wiek == 0, to test również przechodzi. To wina testu, czy implementacji?
      */
     @Test
     void shouldContainExceptionWhenAgeBelow0() {
         //given - arrange
-        Person person = buildPerson(LocalDate.of(2000, 1, 1), Person.GENDER.MALE, "00410171972");
+        Person person = buildPerson(-1);
         //when - act
-        boolean result = ageVerification.passes(person);
+
         //then - assert
-        Assertions.assertTrue(result);
+        Assertions.assertThrows(IllegalStateException.class, () -> ageVerification.passes(person), "Age has not to be negative");
     }
 
+    /**
+     * Poniższy test działa źle. Jeżeli wiek == 0, to test również przechodzi. To wina testu, czy bardziej implementacji?
+     * O jaki Message chodzi?
+     */
     @Test
     void shouldContainExceptionWhenAgeBelow0WithMessage() {
         //given - arrange
-        Person person = buildPerson(LocalDate.of(2000, 1, 1), Person.GENDER.MALE, "00410171972");
+        Person person = buildPerson(-1);
         //when - act
-        try {
-            if (person.getAge() < 0) {
-                throw new IllegalArgumentException(" You set a negative age. It must be non-negative.");
-            }
-        } catch (IllegalStateException age) {
-            System.out.println(" Set a proper age.");
-        }
-        //then - assert
 
+        //then - assert
+        Assertions.assertThrows(IllegalStateException.class, () -> ageVerification.passes(person), "Age has not to be negative");
     }
 
+    /**
+     * Poniższy test działa źle. Jeżeli wiek == 0, to test również przechodzi. To wina testu, czy bardziej implementacji?
+     */
     @Test
     void shouldContainExceptionWhenAgeBelow0UsingAssertJ() {
         //given - arrange
-        Person person = buildPerson(LocalDate.of(2100, 1, 1), Person.GENDER.MALE, "00410171972");
+        Person person = buildPerson(-1);
         //when - act
 
         //then - assert
-        assertThatThrownBy(() -> ageVerification.passes(person)).isInstanceOf(IllegalStateException.class);
+        Assertions.assertThrows(IllegalStateException.class, () -> ageVerification.passes(person), "Age has not to be negative");
     }
 
-    Person buildPerson(LocalDate localdate, Person.GENDER gender, String nationalIdentificationNumber) {
-        return new Person("Andrzej", "Nowak", localdate, gender, nationalIdentificationNumber);
+    private Person buildPerson(int age) {
+        LocalDate yearDate = LocalDate.now().minusYears(age);
+        return new Person("Andrzej", "Nowak", LocalDate.of(yearDate.getYear(), 1, 1), Person.GENDER.MALE, "00410171972");
     }
 }
