@@ -32,28 +32,20 @@ class AgeVerificationTest {
         Assertions.assertEquals(true, check);
     }
 
-    /**
-     * Jeżeli rzucany jest wyjątek można pominąć when (??????)
-     */
     @Test
     void shouldContainExceptionWhenAgeBelow0() {
         //given - arrange
         Person person = buildPerson(-1);
         //when - act
-        /** Czy w przypadku wyjątku asercja ma być w when (przesłany kod) czy then?? */
         //then - assert
         Assertions.assertThrows(IllegalStateException.class, () -> ageVerification.passes(person));
     }
 
-    /**
-     * Jeżeli rzucany jest wyjątek można pominąć when
-     */
     @Test
     void shouldContainExceptionWhenAgeBelow0WithMessage() {
         //given - arrange
         Person person = buildPerson(-1);
         //when - act
-        /** Czy w przypadku wyjątku asercja ma być w when (przesłany kod) czy then?? */
         //then - assert
         Assertions.assertThrows(IllegalStateException.class, () -> ageVerification.passes(person), "Age cannot be negative.");
     }
@@ -63,7 +55,6 @@ class AgeVerificationTest {
         //given - arrange
         Person person = buildPerson(-1);
         //when - act
-
         //then - assert
         assertThatThrownBy(() -> {
             ageVerification.passes(person);
@@ -91,13 +82,16 @@ class AgeVerificationTest {
         //given - arrange
         Person person = buildPerson(-3);
         //when - act
-        /** Czy w przypadku wyjątku asercja ma być w when (przesłany kod) czy then?? */
         //then - assert
         assertThatExceptionOfType(IllegalStateException.class)
                 .isThrownBy(() -> ageVerification.passes(person))
                 .withMessageContaining("negative")
                 /**  havingCause(), withNoCause() etc. - Nie rozumiem, kiedy, co i jak to działa, a kiedy nie.
-                 * Po polsku nic nie znalazłem. Z dokumentacji nie rozumiem. */
+                 * Po polsku nic nie znalazłem. Z dokumentacji nie rozumiem.
+                 * Np. w dokumentacji AssertJ:
+                 * https://assertj.github.io/doc/#assertj-core-exception-assertions
+                 *
+                 * */
 //                .havingCause();
 //                .getCause();
                 .withNoCause();
@@ -105,7 +99,8 @@ class AgeVerificationTest {
     }
     /**
      * Czym różnią się te trzy ostatnie metody (assertThatThrownBy, assertThat(catchThrowable()), assertThatExceptionOfType ???
-     * Jak dla mnie to praktycznie to samo, tylko w inny sposób.
+     *
+     * Myślę, że mój problem polega na tym, że nie ogarniam Throwable i stąd brak zrozumienia tych metod.
      */
     private Person buildPerson(int age) {
         LocalDate yearDate = LocalDate.now().minusYears(age);
