@@ -58,9 +58,7 @@ class AgeVerificationTest {
         //then - assert
         assertThatThrownBy(() -> {
             ageVerification.passes(person);
-        })
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Age cannot");
+        }).isInstanceOf(IllegalStateException.class).hasMessageContaining("Age cannot");
     }
 
     @Test
@@ -72,9 +70,7 @@ class AgeVerificationTest {
             throw new IllegalStateException("Age cannot be negative.");
         });
         //then - assert
-        assertThat(thrown)
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessageContaining("Age cannot be negative.");
+        assertThat(thrown).isInstanceOf(IllegalStateException.class).hasMessageContaining("Age cannot be negative.");
     }
 
     @Test
@@ -83,28 +79,11 @@ class AgeVerificationTest {
         Person person = buildPerson(-3);
         //when - act
         //then - assert
-        assertThatExceptionOfType(IllegalStateException.class)
-                .isThrownBy(() -> ageVerification.passes(person))
-                .withMessageContaining("negative")
-                /**  havingCause(), withNoCause() etc. - Nie rozumiem, kiedy, co i jak to działa, a kiedy nie.
-                 * Po polsku nic nie znalazłem. Z dokumentacji nie rozumiem.
-                 * Np. w dokumentacji AssertJ:
-                 * https://assertj.github.io/doc/#assertj-core-exception-assertions
-                 *
-                 * */
-//                .havingCause();
-//                .getCause();
-                .withNoCause();
-//                .hasRootCause();
+        assertThatExceptionOfType(IllegalStateException.class).isThrownBy(() -> ageVerification.passes(person)).withMessageContaining("negative");
     }
-    /**
-     * Czym różnią się te trzy ostatnie metody (assertThatThrownBy, assertThat(catchThrowable()), assertThatExceptionOfType ???
-     *
-     * Myślę, że mój problem polega na tym, że nie ogarniam Throwable i stąd brak zrozumienia tych metod.
-     */
+
     private Person buildPerson(int age) {
         LocalDate yearDate = LocalDate.now().minusYears(age);
-        return new Person("Andrzej", "Nowak", LocalDate.of(yearDate.getYear(), 1, 1),
-                Person.GENDER.MALE, "00410171972");
+        return new Person("Andrzej", "Nowak", LocalDate.of(yearDate.getYear(), 1, 1), Person.GENDER.MALE, "00410171972");
     }
 }
